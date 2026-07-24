@@ -1,8 +1,8 @@
 # ecommerce-web
 
-React + Vite frontend — host bằng **GitHub Pages**.
+React + Vite frontend — đang host bằng **GitHub Pages**.
 
-## URL
+## Live URL
 
 https://minhmarino.github.io/ecommerce-web/
 
@@ -21,8 +21,8 @@ Sau khi API lên Render, set GitHub repo variable:
 - Name: `VITE_API_URL`
 - Value: `https://your-api.onrender.com`
 
-Rồi re-run workflow **Deploy GitHub Pages**.
+Rồi push lại `main` (hoặc chạy workflow **Deploy GitHub Pages**).
 
 ## Deploy
 
-Push lên `main` sẽ tự build & publish Pages (GitHub Actions).
+Push lên `main` sẽ build và publish nhánh `gh-pages`.
