@@ -23,6 +23,12 @@ Sau khi API lên Render, set GitHub repo variable:
 
 Rồi push lại `main` (hoặc chạy workflow **Deploy GitHub Pages**).
 
-## Deploy
+## Auto deploy
 
-Push lên `main` sẽ build và publish nhánh `gh-pages`.
+Đã bật GitHub Actions: mỗi lần push `main` sẽ tự:
+
+1. `npm ci` + `npm run build`
+2. Publish artifact lên nhánh `gh-pages`
+3. GitHub Pages serve tại URL ở trên
+
+Workflow: `.github/workflows/deploy-pages.yml`
