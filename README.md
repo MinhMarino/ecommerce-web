@@ -1,6 +1,10 @@
 # ecommerce-web
 
-React + Vite frontend cho quản lý bán khóa học và học sinh.
+React + Vite frontend — host bằng **GitHub Pages**.
+
+## URL
+
+https://minhmarino.github.io/ecommerce-web/
 
 ## Local
 
@@ -10,14 +14,15 @@ npm install
 npm run dev
 ```
 
-Web: http://localhost:5173
+## API URL
 
-## Deploy Render (Static Site)
+Sau khi API lên Render, set GitHub repo variable:
 
-1. New → Static Site → connect repo `ecommerce-web`
-2. Build: `npm install && npm run build`
-3. Publish directory: `dist`
-4. Env vars:
-   - `VITE_API_URL` = URL API Render, ví dụ `https://ecommerce-api.onrender.com`
+- Name: `VITE_API_URL`
+- Value: `https://your-api.onrender.com`
 
-Sau khi có URL web, cập nhật `CORS_ORIGIN` bên `ecommerce-api` cho khớp.
+Rồi re-run workflow **Deploy GitHub Pages**.
+
+## Deploy
+
+Push lên `main` sẽ tự build & publish Pages (GitHub Actions).
