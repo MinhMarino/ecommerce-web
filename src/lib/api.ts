@@ -1,4 +1,5 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+const API_URL =
+  import.meta.env.VITE_API_URL || "https://ecommerce-api-kn26.onrender.com";
 
 type RequestOpts = RequestInit & { auth?: boolean; guest?: boolean };
 
