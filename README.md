@@ -1,34 +1,26 @@
-# ecommerce-web
+# Mono Commerce Web
 
-React + Vite frontend — đang host bằng **GitHub Pages**.
+React + Vite storefront (GitHub Pages).
 
-## Live URL
+## Live
 
 https://minhmarino.github.io/ecommerce-web/
 
-## Local
+## Setup
 
 ```bash
 cp .env.example .env
+# VITE_API_URL=https://your-api.onrender.com
 npm install
 npm run dev
 ```
 
-## API URL
+## Features
 
-Sau khi API lên Render, set GitHub repo variable:
-
-- Name: `VITE_API_URL`
-- Value: `https://your-api.onrender.com`
-
-Rồi push lại `main` (hoặc chạy workflow **Deploy GitHub Pages**).
-
-## Auto deploy
-
-Đã bật GitHub Actions: mỗi lần push `main` sẽ tự:
-
-1. `npm ci` + `npm run build`
-2. Publish artifact lên nhánh `gh-pages`
-3. GitHub Pages serve tại URL ở trên
-
-Workflow: `.github/workflows/deploy-pages.yml`
+- Home sections (banner/categories/flash sale/featured/...)
+- Catalog search + sort
+- Product detail, cart, checkout
+- Auth (register/login/forgot/reset/verify)
+- Account + orders + wishlist
+- Admin dashboard + create product
+- Light/Dark mode
