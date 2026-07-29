@@ -16,7 +16,7 @@ export function SalesChart({ data }: { data: { day: string; total: number; count
               className="rounded-t-sm bg-accent/80 transition-colors group-hover:bg-accent"
               style={{ height: `${Math.max(4, (d.total / max) * 100)}%` }}
             />
-            <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-ink px-2.5 py-1.5 text-xs text-canvas opacity-0 shadow-pop transition-opacity group-hover:opacity-100">
+            <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 whitespace-nowrap rounded-md bg-ink px-2.5 py-1.5 text-xs text-canvas opacity-0 shadow-pop transition-opacity group-hover:opacity-100">
               <p className="font-semibold">{formatCurrency(d.total)}</p>
               <p className="text-canvas/70">{formatDate(d.day)} · {d.count} đơn</p>
             </div>

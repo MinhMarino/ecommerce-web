@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { Flame, Heart, ImageOff } from "lucide-react";
+import { Heart, ImageOff, Zap } from "lucide-react";
 import { cn, discountPercent, formatCurrency } from "../lib/utils";
-import { Badge } from "./ui/Badge";
+import { StarRating } from "./ui/StarRating";
 
 export type ProductCardData = {
   id: string;
@@ -33,70 +33,85 @@ export function ProductCard({
     <Link
       to={`/products/${product.slug}`}
       className={cn(
-        "group flex flex-col overflow-hidden rounded-card border border-line bg-surface shadow-card transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-pop",
+        "group relative flex flex-col overflow-hidden rounded-card border border-line bg-surface transition-shadow duration-150 hover:border-line-strong hover:shadow-pop",
         className,
       )}
     >
-      <div className="relative aspect-square overflow-hidden bg-subtle">
+      <div className="absolute left-0 top-0 z-10 flex flex-col items-start">
+        {product.isFlashSale && (
+          <span className="flex items-center gap-0.5 rounded-br-md rounded-tl-card bg-ink px-2 py-1 text-[11px] font-bold text-white">
+            <Zap className="h-3 w-3 fill-warning text-warning" /> Sale
+          </span>
+        )}
+        {pct > 0 && (
+          <span
+            className={cn(
+              "bg-accent px-2 py-1 text-[11px] font-bold text-accent-ink",
+              product.isFlashSale ? "rounded-br-md" : "rounded-br-md rounded-tl-card",
+            )}
+          >
+            -{pct}%
+          </span>
+        )}
+      </div>
+
+      {onToggleWishlist && (
+        <button
+          type="button"
+          aria-label={wished ? "Bỏ yêu thích" : "Thêm vào yêu thích"}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onToggleWishlist(product);
+          }}
+          className="absolute right-1.5 top-1.5 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-surface/90 text-muted shadow-sm backdrop-blur transition-colors hover:text-accent"
+        >
+          <Heart className={cn("h-3.5 w-3.5", wished && "fill-accent text-accent")} />
+        </button>
+      )}
+
+      <div className="relative aspect-square overflow-hidden bg-white p-3">
         {product.image ? (
           <img
             src={product.image}
             alt={product.name}
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            className="h-full w-full object-contain transition-transform duration-200 group-hover:scale-[1.03]"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-muted">
             <ImageOff className="h-8 w-8" />
           </div>
         )}
-
-        <div className="absolute left-2 top-2 flex flex-col gap-1.5">
-          {product.isFlashSale && (
-            <Badge tone="danger" className="bg-danger text-white border-transparent">
-              <Flame className="h-3 w-3" /> Flash sale
-            </Badge>
-          )}
-          {pct > 0 && (
-            <Badge tone="accent" className="bg-accent text-accent-ink border-transparent">
-              -{pct}%
-            </Badge>
-          )}
-        </div>
-
-        {onToggleWishlist && (
-          <button
-            type="button"
-            aria-label={wished ? "Bỏ yêu thích" : "Thêm vào yêu thích"}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              onToggleWishlist(product);
-            }}
-            className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-surface/90 text-ink shadow-sm backdrop-blur transition-colors hover:text-accent"
-          >
-            <Heart className={cn("h-4 w-4", wished && "fill-accent text-accent")} />
-          </button>
-        )}
       </div>
 
-      <div className="flex flex-1 flex-col gap-1.5 p-3.5">
-        <h3 className="line-clamp-2 min-h-[2.5rem] text-sm font-medium leading-snug text-ink">
+      <div className="flex flex-1 flex-col gap-1 border-t border-line px-3 pb-3 pt-2.5">
+        <h3 className="line-clamp-2 min-h-[2.25rem] text-[13px] font-medium leading-snug text-ink group-hover:text-accent">
           {product.name}
         </h3>
-        <div className="mt-auto flex flex-wrap items-baseline gap-1.5">
-          <span className="font-serif text-base font-semibold text-accent">
+        <div className="mt-0.5 flex flex-wrap items-baseline gap-1.5">
+          <span className="text-[15px] font-bold text-accent">
             {formatCurrency(product.salePrice ?? product.price)}
           </span>
-          {product.salePrice ? (
-            <span className="text-xs text-muted line-through">
-              {formatCurrency(product.price)}
-            </span>
-          ) : null}
         </div>
-        {typeof product.soldCount === "number" && product.soldCount > 0 && (
-          <p className="text-xs text-muted">Đã bán {product.soldCount}</p>
-        )}
+        {product.salePrice ? (
+          <span className="text-xs text-muted line-through">
+            {formatCurrency(product.price)}
+          </span>
+        ) : null}
+        {(typeof product.ratingAverage === "number" && product.ratingAverage > 0) ||
+        (typeof product.soldCount === "number" && product.soldCount > 0) ? (
+          <div className="mt-1 flex items-center justify-between gap-1.5">
+            {typeof product.ratingAverage === "number" && product.ratingAverage > 0 ? (
+              <StarRating value={product.ratingAverage} />
+            ) : (
+              <span />
+            )}
+            {typeof product.soldCount === "number" && product.soldCount > 0 && (
+              <span className="text-[11px] text-muted">Đã bán {product.soldCount}</span>
+            )}
+          </div>
+        ) : null}
       </div>
     </Link>
   );
@@ -117,7 +132,7 @@ export function ProductGrid({
     return <p className="py-8 text-center text-sm text-muted">{emptyMessage}</p>;
   }
   return (
-    <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-2.5 sm:gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       {items.map((p) => (
         <ProductCard
           key={p.id}

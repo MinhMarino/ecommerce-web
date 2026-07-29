@@ -19,7 +19,7 @@ export function QuantityStepper({
   return (
     <div
       className={cn(
-        "inline-flex items-center rounded-lg border border-line",
+        "inline-flex items-center rounded-md border border-line",
         disabled && "opacity-50",
         className,
       )}
@@ -29,7 +29,7 @@ export function QuantityStepper({
         aria-label="Giảm số lượng"
         disabled={disabled || value <= min}
         onClick={() => onChange(Math.max(min, value - 1))}
-        className="flex h-9 w-9 items-center justify-center text-ink disabled:opacity-40 hover:bg-subtle rounded-l-lg"
+        className="flex h-9 w-9 items-center justify-center text-ink disabled:opacity-40 hover:bg-subtle rounded-l-md"
       >
         <Minus className="h-3.5 w-3.5" />
       </button>
@@ -41,7 +41,7 @@ export function QuantityStepper({
         aria-label="Tăng số lượng"
         disabled={disabled || (max !== undefined && value >= max)}
         onClick={() => onChange(max !== undefined ? Math.min(max, value + 1) : value + 1)}
-        className="flex h-9 w-9 items-center justify-center text-ink disabled:opacity-40 hover:bg-subtle rounded-r-lg"
+        className="flex h-9 w-9 items-center justify-center text-ink disabled:opacity-40 hover:bg-subtle rounded-r-md"
       >
         <Plus className="h-3.5 w-3.5" />
       </button>

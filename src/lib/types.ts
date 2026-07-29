@@ -219,3 +219,15 @@ export type AdminProduct = ProductSummary & {
   updatedAt: string;
   variants: ProductVariant[];
 };
+
+export type AdminOrderListItem = {
+  id: string;
+  orderNumber: string;
+  status: string;
+  paymentStatus: string;
+  paymentMethod: string;
+  total: number;
+  itemCount: number;
+  createdAt: string;
+  user: { id: string; fullName: string; email: string };
+};

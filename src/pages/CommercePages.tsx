@@ -89,7 +89,7 @@ export function CartPage() {
 
   return (
     <Container className="py-8 sm:py-10">
-      <h1 className="text-2xl font-semibold sm:text-3xl">Giỏ hàng</h1>
+      <h1 className="text-xl font-bold sm:text-2xl">Giỏ hàng</h1>
 
       {!cart.items.length ? (
         <EmptyState
@@ -260,7 +260,7 @@ export function CheckoutPage() {
 
   return (
     <Container className="py-8 sm:py-10">
-      <h1 className="text-2xl font-semibold sm:text-3xl">Thanh toán</h1>
+      <h1 className="text-xl font-bold sm:text-2xl">Thanh toán</h1>
 
       <form onSubmit={onSubmit} className="mt-6 grid gap-8 lg:grid-cols-[1fr_360px]">
         <div className="space-y-6">
@@ -294,7 +294,7 @@ export function CheckoutPage() {
               {methods.map((m) => (
                 <label
                   key={m.id}
-                  className="flex cursor-pointer items-center justify-between rounded-xl border border-line p-3 text-sm has-[:checked]:border-accent has-[:checked]:bg-accent/5"
+                  className="flex cursor-pointer items-center justify-between rounded-md border border-line p-3 text-sm has-[:checked]:border-accent has-[:checked]:bg-accent/5"
                 >
                   <span className="flex items-center gap-2.5">
                     <input
@@ -323,7 +323,7 @@ export function CheckoutPage() {
               ].map((opt) => (
                 <label
                   key={opt.value}
-                  className="flex cursor-pointer items-center gap-2.5 rounded-xl border border-line p-3 text-sm has-[:checked]:border-accent has-[:checked]:bg-accent/5"
+                  className="flex cursor-pointer items-center gap-2.5 rounded-md border border-line p-3 text-sm has-[:checked]:border-accent has-[:checked]:bg-accent/5"
                 >
                   <input
                     type="radio"
@@ -546,7 +546,7 @@ export function OrderDetailPage() {
     <Container className="py-8 sm:py-10">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Đơn hàng {order.orderNumber}</h1>
+          <h1 className="text-xl font-bold">Đơn hàng {order.orderNumber}</h1>
           <p className="text-sm text-muted">Đặt ngày {formatDateTime(order.createdAt)}</p>
         </div>
         <div className="flex gap-2">

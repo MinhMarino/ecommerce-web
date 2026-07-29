@@ -52,13 +52,13 @@ function FilterPanel({
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="mb-3 text-sm font-semibold">Danh mục</h3>
-        <div className="space-y-1.5">
+        <h3 className="mb-3 text-sm font-bold uppercase tracking-wide text-ink">Danh mục</h3>
+        <div className="space-y-1">
           <button
             type="button"
             onClick={() => onChange({ category: null })}
             className={cn(
-              "block w-full rounded-lg px-2.5 py-1.5 text-left text-sm",
+              "block w-full rounded-md px-2.5 py-1.5 text-left text-sm",
               !activeCategory ? "bg-accent/10 font-semibold text-accent" : "text-muted hover:bg-subtle",
             )}
           >
@@ -70,7 +70,7 @@ function FilterPanel({
               type="button"
               onClick={() => onChange({ category: c.slug })}
               className={cn(
-                "block w-full rounded-lg px-2.5 py-1.5 text-left text-sm",
+                "block w-full rounded-md px-2.5 py-1.5 text-left text-sm",
                 activeCategory === c.slug ? "bg-accent/10 font-semibold text-accent" : "text-muted hover:bg-subtle",
               )}
             >
@@ -81,13 +81,13 @@ function FilterPanel({
       </div>
 
       <div>
-        <h3 className="mb-3 text-sm font-semibold">Thương hiệu</h3>
-        <div className="space-y-1.5">
+        <h3 className="mb-3 text-sm font-bold uppercase tracking-wide text-ink">Thương hiệu</h3>
+        <div className="space-y-1">
           <button
             type="button"
             onClick={() => onChange({ brand: null })}
             className={cn(
-              "block w-full rounded-lg px-2.5 py-1.5 text-left text-sm",
+              "block w-full rounded-md px-2.5 py-1.5 text-left text-sm",
               !activeBrand ? "bg-accent/10 font-semibold text-accent" : "text-muted hover:bg-subtle",
             )}
           >
@@ -99,7 +99,7 @@ function FilterPanel({
               type="button"
               onClick={() => onChange({ brand: b.slug })}
               className={cn(
-                "block w-full rounded-lg px-2.5 py-1.5 text-left text-sm",
+                "block w-full rounded-md px-2.5 py-1.5 text-left text-sm",
                 activeBrand === b.slug ? "bg-accent/10 font-semibold text-accent" : "text-muted hover:bg-subtle",
               )}
             >
@@ -110,7 +110,7 @@ function FilterPanel({
       </div>
 
       <div>
-        <h3 className="mb-3 text-sm font-semibold">Khoảng giá</h3>
+        <h3 className="mb-3 text-sm font-bold uppercase tracking-wide text-ink">Khoảng giá</h3>
         <div className="flex items-center gap-2">
           <Input
             type="number"
@@ -133,15 +133,15 @@ function FilterPanel({
       </div>
 
       <div>
-        <h3 className="mb-3 text-sm font-semibold">Đánh giá</h3>
-        <div className="space-y-1.5">
+        <h3 className="mb-3 text-sm font-bold uppercase tracking-wide text-ink">Đánh giá</h3>
+        <div className="space-y-1">
           {RATING_OPTIONS.map((r) => (
             <button
               key={r}
               type="button"
               onClick={() => onChange({ minRating: activeRating === String(r) ? null : String(r) })}
               className={cn(
-                "flex w-full items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-left text-sm",
+                "flex w-full items-center gap-1.5 rounded-md px-2.5 py-1.5 text-left text-sm",
                 activeRating === String(r) ? "bg-accent/10 font-semibold text-accent" : "text-muted hover:bg-subtle",
               )}
             >
@@ -261,8 +261,8 @@ export function ProductsPage() {
 
   return (
     <Container className="py-8 sm:py-10">
-      <div className="mb-6 flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold sm:text-3xl">Sản phẩm</h1>
+      <div className="mb-5 flex flex-col gap-0.5">
+        <h1 className="text-xl font-bold sm:text-2xl">Sản phẩm</h1>
         <p className="text-sm text-muted">
           {result ? `${result.pagination.total} sản phẩm` : "Đang tải danh sách sản phẩm"}
         </p>
@@ -304,13 +304,13 @@ export function ProductsPage() {
             />
             <div className="absolute inset-y-0 right-0 flex w-[85%] max-w-sm flex-col overflow-y-auto bg-surface p-5 shadow-pop">
               <div className="mb-4 flex items-center justify-between">
-                <h2 className="flex items-center gap-2 text-lg font-semibold">
+                <h2 className="flex items-center gap-2 text-lg font-bold">
                   <SlidersHorizontal className="h-4.5 w-4.5" /> Bộ lọc
                 </h2>
                 <button
                   type="button"
                   onClick={() => setMobileFiltersOpen(false)}
-                  className="rounded-lg p-1.5 hover:bg-subtle"
+                  className="rounded-md p-1.5 hover:bg-subtle"
                   aria-label="Đóng"
                 >
                   <X className="h-5 w-5" />

@@ -99,8 +99,8 @@ export function HomePage() {
   if (!data) {
     return (
       <div>
-        <div className="h-[420px] w-full bg-subtle" />
-        <Container className="py-12">
+        <div className="h-[280px] w-full bg-subtle" />
+        <Container className="py-8">
           <ProductGridSkeleton />
         </Container>
       </div>
@@ -108,29 +108,29 @@ export function HomePage() {
   }
 
   const hero = data.banners[0];
-  const siteName = data.settings.site_name || "Mono Commerce";
 
   return (
     <div>
       {/* Hero */}
       <section className="relative overflow-hidden" style={{ background: "var(--hero-grad)" }}>
-        <Container className="grid gap-10 py-14 sm:py-20 lg:grid-cols-2 lg:items-center">
-          <div className="max-w-xl">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-accent/25 bg-accent/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent">
-              {siteName}
-            </span>
-            <h1 className="mt-4 text-4xl font-semibold leading-[1.08] sm:text-5xl lg:text-6xl">
-              {hero?.title || data.settings.site_tagline || "Mua sắm hiện đại, vận hành chuyên nghiệp"}
+        <Container className="grid gap-6 py-8 sm:py-10 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:py-14">
+          <div className="max-w-xl text-white">
+            <h1 className="text-3xl font-extrabold leading-[1.1] sm:text-4xl lg:text-5xl">
+              {hero?.title || "Mua sắm hiện đại, vận hành chuyên nghiệp"}
             </h1>
-            <p className="mt-4 text-base text-muted sm:text-lg">
+            <p className="mt-3 text-sm text-white/85 sm:text-base">
               Khám phá catalog sản phẩm được tuyển chọn, đặt hàng nhanh chóng và thanh toán khi nhận
               hàng — mọi thứ bạn cần trong một nền tảng.
             </p>
-            <div className="mt-7 flex flex-wrap gap-3">
-              <ButtonLink size="lg" to="/products">
+            <div className="mt-6 flex flex-wrap gap-3">
+              <ButtonLink size="lg" to="/products" className="bg-white text-accent hover:bg-white/90">
                 Khám phá sản phẩm <ArrowRight className="h-4 w-4" />
               </ButtonLink>
-              <ButtonLink variant="outline" size="lg" to="/register">
+              <ButtonLink
+                size="lg"
+                to="/register"
+                className="border border-white/50 bg-transparent text-white hover:bg-white/10"
+              >
                 Tạo tài khoản
               </ButtonLink>
             </div>
@@ -145,14 +145,14 @@ export function HomePage() {
       </section>
 
       {/* Perks bar */}
-      <Container className="-mt-1">
-        <div className="grid grid-cols-2 gap-3 rounded-card border border-line bg-surface p-4 shadow-card sm:grid-cols-4 sm:p-5">
+      <Container className="-mt-px">
+        <div className="grid grid-cols-2 gap-2.5 border-b border-line bg-surface px-1 py-3 sm:grid-cols-4 sm:py-4">
           {PERKS.map((perk) => (
-            <div key={perk.title} className="flex items-start gap-2.5">
+            <div key={perk.title} className="flex items-start gap-2">
               <perk.icon className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
               <div>
-                <p className="text-sm font-semibold leading-tight">{perk.title}</p>
-                <p className="text-xs text-muted">{perk.desc}</p>
+                <p className="text-[13px] font-semibold leading-tight">{perk.title}</p>
+                <p className="text-[11px] text-muted">{perk.desc}</p>
               </div>
             </div>
           ))}
@@ -160,25 +160,25 @@ export function HomePage() {
       </Container>
 
       {/* Categories */}
-      <Section>
+      <Section className="!py-5">
         <Container>
-          <SectionHeading title="Danh mục nổi bật" subtitle="Khám phá theo nhóm ngành hàng" />
+          <SectionHeading title="Danh mục nổi bật" />
           {data.categories.length ? (
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-6">
+            <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 md:grid-cols-8">
               {data.categories.map((c) => (
                 <Link
                   key={c.id}
                   to={`/products?category=${c.slug}`}
-                  className="group flex flex-col items-center gap-2.5 rounded-card border border-line bg-surface p-4 text-center shadow-card transition-transform hover:-translate-y-0.5 hover:shadow-pop"
+                  className="group flex flex-col items-center gap-2 rounded-card border border-line bg-surface p-3 text-center transition-colors hover:border-accent hover:bg-accent/5"
                 >
-                  <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-subtle text-lg font-semibold text-accent">
+                  <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-subtle text-base font-bold text-accent">
                     {c.imageUrl ? (
                       <img src={c.imageUrl} alt={c.name} className="h-full w-full object-cover" />
                     ) : (
                       c.name.slice(0, 1)
                     )}
                   </div>
-                  <span className="text-sm font-medium leading-snug">{c.name}</span>
+                  <span className="line-clamp-2 text-[12px] font-medium leading-snug">{c.name}</span>
                 </Link>
               ))}
             </div>
@@ -189,34 +189,41 @@ export function HomePage() {
       </Section>
 
       {/* Flash sale */}
-      <Section className="bg-danger/5">
+      <Section className="!py-5">
         <Container>
-          <SectionHeading
-            title={
-              <span className="flex items-center gap-2 text-danger">
-                <Flame className="h-6 w-6" /> Flash Sale
+          <div className="overflow-hidden rounded-card bg-gradient-to-r from-accent to-[#970010] p-4 sm:p-5">
+            <div className="mb-4 flex items-center justify-between gap-4">
+              <span className="flex items-center gap-2 text-lg font-extrabold text-white sm:text-xl">
+                <Flame className="h-6 w-6 fill-warning text-warning" /> Flash Sale
               </span>
-            }
-            subtitle="Ưu đãi có thời hạn — nhanh tay trước khi hết hàng"
-            action={
-              <Link to="/products?flashSale=true" className="hidden text-sm font-semibold text-accent hover:underline sm:block">
-                Xem tất cả
+              <Link
+                to="/products?flashSale=true"
+                className="flex items-center gap-1 text-sm font-semibold text-white/90 hover:text-white"
+              >
+                Xem tất cả <ArrowRight className="h-3.5 w-3.5" />
               </Link>
-            }
-          />
-          <ProductGrid items={data.flashSale.map(toCard)} emptyMessage="Hiện chưa có sản phẩm flash sale." />
+            </div>
+            {data.flashSale.length ? (
+              <div className="rounded-card bg-canvas p-3 sm:p-4">
+                <ProductGrid items={data.flashSale.map(toCard)} />
+              </div>
+            ) : (
+              <p className="rounded-card bg-white/10 px-4 py-6 text-center text-sm text-white/90">
+                Hiện chưa có sản phẩm flash sale.
+              </p>
+            )}
+          </div>
         </Container>
       </Section>
 
       {/* Featured */}
-      <Section>
+      <Section className="!py-5">
         <Container>
           <SectionHeading
             title="Sản phẩm nổi bật"
-            subtitle="Được tuyển chọn kỹ càng"
             action={
-              <Link to="/products?featured=true" className="hidden text-sm font-semibold text-accent hover:underline sm:block">
-                Xem tất cả
+              <Link to="/products?featured=true" className="flex items-center gap-1 text-sm font-semibold text-accent hover:underline">
+                Xem tất cả <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             }
           />
@@ -225,14 +232,13 @@ export function HomePage() {
       </Section>
 
       {/* Bestsellers */}
-      <Section className="bg-subtle/50">
+      <Section className="!py-5 bg-subtle/60">
         <Container>
           <SectionHeading
             title="Bán chạy nhất"
-            subtitle="Được khách hàng lựa chọn nhiều nhất"
             action={
-              <Link to="/products?sort=bestseller" className="hidden text-sm font-semibold text-accent hover:underline sm:block">
-                Xem tất cả
+              <Link to="/products?sort=bestseller" className="flex items-center gap-1 text-sm font-semibold text-accent hover:underline">
+                Xem tất cả <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             }
           />
@@ -241,14 +247,13 @@ export function HomePage() {
       </Section>
 
       {/* Newest */}
-      <Section>
+      <Section className="!py-5">
         <Container>
           <SectionHeading
             title="Hàng mới về"
-            subtitle="Cập nhật liên tục mỗi ngày"
             action={
-              <Link to="/products?sort=newest" className="hidden text-sm font-semibold text-accent hover:underline sm:block">
-                Xem tất cả
+              <Link to="/products?sort=newest" className="flex items-center gap-1 text-sm font-semibold text-accent hover:underline">
+                Xem tất cả <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             }
           />
@@ -257,16 +262,16 @@ export function HomePage() {
       </Section>
 
       {/* Brands */}
-      <Section className="bg-subtle/50">
+      <Section className="!py-5 bg-subtle/60">
         <Container>
-          <SectionHeading title="Thương hiệu" subtitle="Đối tác và nhà cung cấp uy tín" />
+          <SectionHeading title="Thương hiệu" />
           {data.brands.length ? (
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-2.5">
               {data.brands.map((b) => (
                 <Link
                   key={b.id}
                   to={`/products?brand=${b.slug}`}
-                  className="flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium shadow-card transition-colors hover:border-accent hover:text-accent"
+                  className="flex items-center gap-2 rounded-md border border-line bg-surface px-3.5 py-2 text-sm font-medium transition-colors hover:border-accent hover:text-accent"
                 >
                   {b.logoUrl && <img src={b.logoUrl} alt={b.name} className="h-5 w-5 rounded object-contain" />}
                   {b.name}
@@ -280,7 +285,7 @@ export function HomePage() {
       </Section>
 
       {/* Coupons */}
-      <Section>
+      <Section className="!py-5">
         <Container>
           <SectionHeading title="Mã giảm giá" subtitle="Áp dụng ngay khi thanh toán" />
           {data.coupons.length ? (
@@ -290,7 +295,7 @@ export function HomePage() {
                   key={c.code}
                   className="flex items-center gap-4 rounded-card border border-dashed border-accent/40 bg-accent/5 p-4"
                 >
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-accent/15 text-accent">
                     <Tag className="h-5 w-5" />
                   </div>
                   <div className="min-w-0">
@@ -309,15 +314,15 @@ export function HomePage() {
       </Section>
 
       {/* Blog */}
-      <Section className="bg-subtle/50">
+      <Section className="!py-5 bg-subtle/60">
         <Container>
-          <SectionHeading title="Tin tức & Bài viết" subtitle="Cập nhật xu hướng và mẹo mua sắm" />
+          <SectionHeading title="Tin tức & Bài viết" />
           {data.news.length ? (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {data.news.map((n) => (
-                <div key={n.id} className="rounded-card border border-line bg-surface p-5 shadow-card">
+                <div key={n.id} className="rounded-card border border-line bg-surface p-4">
                   <Newspaper className="h-5 w-5 text-accent" />
-                  <h3 className="mt-3 font-semibold leading-snug">{n.title}</h3>
+                  <h3 className="mt-2.5 text-sm font-semibold leading-snug">{n.title}</h3>
                   {n.excerpt && <p className="mt-1.5 line-clamp-3 text-sm text-muted">{n.excerpt}</p>}
                 </div>
               ))}
@@ -329,16 +334,16 @@ export function HomePage() {
       </Section>
 
       {/* Testimonials */}
-      <Section>
+      <Section className="!py-5">
         <Container>
-          <SectionHeading title="Khách hàng nói gì" subtitle="Trải nghiệm thực tế từ người dùng" />
+          <SectionHeading title="Khách hàng nói gì" />
           {data.testimonials.length ? (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {data.testimonials.map((t) => (
-                <div key={t.id} className="rounded-card border border-line bg-surface p-5 shadow-card">
+                <div key={t.id} className="rounded-card border border-line bg-surface p-4">
                   <Quote className="h-5 w-5 text-accent/60" />
                   <p className="mt-2 text-sm leading-relaxed text-ink">{t.content}</p>
-                  <div className="mt-4 flex items-center justify-between">
+                  <div className="mt-3 flex items-center justify-between">
                     <span className="text-sm font-semibold">{t.userName}</span>
                     <StarRating value={t.rating} />
                   </div>
@@ -353,9 +358,9 @@ export function HomePage() {
 
       {/* Newsletter */}
       <Section className="bg-ink text-canvas">
-        <Container className="flex flex-col items-center gap-4 text-center">
-          <Mail className="h-8 w-8 text-accent" />
-          <h2 className="text-2xl font-semibold sm:text-3xl">Đăng ký nhận bản tin</h2>
+        <Container className="flex flex-col items-center gap-3 text-center">
+          <Mail className="h-7 w-7 text-accent" />
+          <h2 className="text-xl font-bold sm:text-2xl">Đăng ký nhận bản tin</h2>
           <p className="max-w-md text-sm text-canvas/70">
             Nhận thông tin ưu đãi, sản phẩm mới và mã giảm giá độc quyền qua email.
           </p>

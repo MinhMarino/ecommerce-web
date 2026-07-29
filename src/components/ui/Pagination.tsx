@@ -37,7 +37,7 @@ export function Pagination({
         aria-label="Trang trước"
         disabled={meta.page <= 1}
         onClick={() => onPageChange(meta.page - 1)}
-        className="flex h-9 w-9 items-center justify-center rounded-lg border border-line text-ink disabled:opacity-40 hover:bg-subtle disabled:hover:bg-transparent"
+        className="flex h-9 w-9 items-center justify-center rounded-md border border-line text-ink disabled:opacity-40 hover:bg-subtle disabled:hover:bg-transparent"
       >
         <ChevronLeft className="h-4 w-4" />
       </button>
@@ -53,7 +53,7 @@ export function Pagination({
               aria-current={p === meta.page ? "page" : undefined}
               onClick={() => onPageChange(p)}
               className={cn(
-                "flex h-9 min-w-9 items-center justify-center rounded-lg px-2 text-sm font-medium transition-colors",
+                "flex h-9 min-w-9 items-center justify-center rounded-md px-2 text-sm font-medium transition-colors",
                 p === meta.page
                   ? "bg-accent text-accent-ink"
                   : "border border-line text-ink hover:bg-subtle",
@@ -70,7 +70,7 @@ export function Pagination({
         aria-label="Trang sau"
         disabled={meta.page >= meta.totalPages}
         onClick={() => onPageChange(meta.page + 1)}
-        className="flex h-9 w-9 items-center justify-center rounded-lg border border-line text-ink disabled:opacity-40 hover:bg-subtle disabled:hover:bg-transparent"
+        className="flex h-9 w-9 items-center justify-center rounded-md border border-line text-ink disabled:opacity-40 hover:bg-subtle disabled:hover:bg-transparent"
       >
         <ChevronRight className="h-4 w-4" />
       </button>

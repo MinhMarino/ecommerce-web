@@ -17,10 +17,10 @@ export const buttonVariantClasses: Record<ButtonVariant, string> = {
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
-  sm: "h-8 px-3 text-sm gap-1.5 rounded-lg",
-  md: "h-10 px-4 text-sm gap-2 rounded-xl",
-  lg: "h-12 px-6 text-base gap-2 rounded-xl",
-  icon: "h-10 w-10 rounded-xl",
+  sm: "h-8 px-3 text-sm gap-1.5 rounded-md",
+  md: "h-10 px-4 text-sm gap-2 rounded-lg",
+  lg: "h-12 px-6 text-base gap-2 rounded-lg",
+  icon: "h-10 w-10 rounded-lg",
 };
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

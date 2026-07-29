@@ -184,7 +184,7 @@ function ContactPage() {
 
   return (
     <Container className="py-10 sm:py-14">
-      <h1 className="text-2xl font-semibold sm:text-3xl">Liên hệ</h1>
+      <h1 className="text-xl font-bold sm:text-2xl">Liên hệ</h1>
       <p className="mt-2 max-w-xl text-sm text-muted">
         Có câu hỏi hoặc cần hỗ trợ? Liên hệ với chúng tôi qua các thông tin dưới đây.
       </p>
@@ -236,7 +236,7 @@ export function StaticPage() {
 
   return (
     <Container className="max-w-3xl py-10 sm:py-14">
-      <h1 className="text-2xl font-semibold sm:text-3xl">{page.title}</h1>
+      <h1 className="text-xl font-bold sm:text-2xl">{page.title}</h1>
       {page.intro && <p className="mt-3 text-sm leading-relaxed text-muted">{page.intro}</p>}
       <div className="mt-8">
         <Accordion sections={page.sections} />

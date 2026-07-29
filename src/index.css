@@ -4,51 +4,50 @@
    Design tokens — runtime-swappable CSS variables.
    [data-theme] is toggled by lib/store.tsx and persisted to
    localStorage, so switching theme never requires a re-render.
+
+   Visual language: dense electronics-retailer style (red / white /
+   near-black), bold discount tags, small radii, high-contrast CTAs.
    ========================================================= */
 :root,
 [data-theme="light"] {
-  --bg: #f6f1e8;
+  --bg: #f1f2f4;
   --bg-elevated: #ffffff;
-  --bg-subtle: #efe7da;
-  --ink: #14181f;
-  --muted: #5c6674;
-  --line: rgba(20, 24, 31, 0.1);
-  --line-strong: rgba(20, 24, 31, 0.22);
-  --accent: #d9480f;
-  --accent-hover: #b8380a;
-  --accent-ink: #fff7f0;
-  --ok: #2b8a3e;
-  --danger: #c92a2a;
-  --warning: #d9720c;
-  --info: #1971c2;
-  --star: #f0a825;
-  --shadow-tint: 20 24 31;
-  --hero-grad: radial-gradient(circle at 12% 10%, #ffe8d6 0%, transparent 42%),
-    radial-gradient(circle at 88% 0%, #d9efe8 0%, transparent 36%),
-    linear-gradient(180deg, #f6f1e8 0%, #efe7da 100%);
+  --bg-subtle: #f6f7f8;
+  --ink: #18181b;
+  --muted: #666b74;
+  --line: rgba(24, 24, 27, 0.1);
+  --line-strong: rgba(24, 24, 27, 0.2);
+  --accent: #e30019;
+  --accent-hover: #b8000f;
+  --accent-ink: #ffffff;
+  --ok: #16a34a;
+  --danger: #dc2626;
+  --warning: #f59e0b;
+  --info: #2563eb;
+  --star: #facc15;
+  --shadow-tint: 24 24 27;
+  --hero-grad: linear-gradient(135deg, #ff2d3a 0%, #e30019 48%, #970010 100%);
   color-scheme: light;
 }
 
 [data-theme="dark"] {
-  --bg: #0e1116;
-  --bg-elevated: #171b22;
-  --bg-subtle: #12161d;
-  --ink: #f3efe6;
-  --muted: #9aa3b2;
-  --line: rgba(243, 239, 230, 0.12);
-  --line-strong: rgba(243, 239, 230, 0.26);
-  --accent: #ff7a3d;
-  --accent-hover: #ff9764;
-  --accent-ink: #1a0f0a;
-  --ok: #51cf66;
-  --danger: #ff6b6b;
-  --warning: #ffa94d;
-  --info: #4dabf7;
-  --star: #ffd43b;
+  --bg: #0f1113;
+  --bg-elevated: #1a1c1f;
+  --bg-subtle: #15171a;
+  --ink: #f4f4f5;
+  --muted: #9aa0aa;
+  --line: rgba(244, 244, 245, 0.1);
+  --line-strong: rgba(244, 244, 245, 0.22);
+  --accent: #ff3b48;
+  --accent-hover: #ff5c67;
+  --accent-ink: #ffffff;
+  --ok: #4ade80;
+  --danger: #f87171;
+  --warning: #fbbf24;
+  --info: #60a5fa;
+  --star: #fbbf24;
   --shadow-tint: 0 0 0;
-  --hero-grad: radial-gradient(circle at 15% 0%, #3a2218 0%, transparent 40%),
-    radial-gradient(circle at 90% 10%, #16312c 0%, transparent 35%),
-    linear-gradient(180deg, #0e1116 0%, #12161d 100%);
+  --hero-grad: linear-gradient(135deg, #7a0010 0%, #4d000a 60%, #1a0306 100%);
   color-scheme: dark;
 }
 
@@ -56,8 +55,8 @@
    bg-canvas / text-ink / border-line / shadow-card are generated
    and automatically react to the [data-theme] attribute. */
 @theme {
-  --font-sans: "DM Sans", system-ui, -apple-system, sans-serif;
-  --font-serif: "Fraunces", Georgia, serif;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-serif: "Inter", system-ui, -apple-system, sans-serif;
 
   --color-canvas: var(--bg);
   --color-surface: var(--bg-elevated);
@@ -75,11 +74,11 @@
   --color-info: var(--info);
   --color-star: var(--star);
 
-  --radius-card: 1.125rem;
+  --radius-card: 0.625rem;
 
   --shadow-card: 0 1px 2px rgb(var(--shadow-tint) / 0.05),
-    0 12px 28px -8px rgb(var(--shadow-tint) / 0.14);
-  --shadow-pop: 0 24px 64px -12px rgb(var(--shadow-tint) / 0.32);
+    0 6px 16px -6px rgb(var(--shadow-tint) / 0.12);
+  --shadow-pop: 0 20px 48px -12px rgb(var(--shadow-tint) / 0.32);
 
   --animate-shimmer: shimmer 1.8s ease-in-out infinite;
   --animate-fade-in: fade-in 0.35s ease-out;
@@ -125,8 +124,8 @@
   h2,
   h3,
   .font-serif {
-    font-family: var(--font-serif);
-    letter-spacing: -0.02em;
+    font-family: var(--font-sans);
+    letter-spacing: -0.01em;
   }
 
   ::selection {

@@ -22,7 +22,7 @@ function AuthCard({
   return (
     <Container className="flex min-h-[80vh] items-center justify-center py-10">
       <div className="w-full max-w-md rounded-card border border-line bg-surface p-6 shadow-card sm:p-8">
-        <h1 className="font-serif text-2xl font-semibold">{title}</h1>
+        <h1 className="text-2xl font-bold">{title}</h1>
         {subtitle && <p className="mt-1.5 text-sm text-muted">{subtitle}</p>}
         <div className="mt-6">{children}</div>
         {footer && <div className="mt-6 text-center text-sm text-muted">{footer}</div>}

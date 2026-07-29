@@ -29,9 +29,9 @@ function Gallery({ images, name }: { images: { url: string; alt?: string | null 
 
   return (
     <div>
-      <div className="aspect-square overflow-hidden rounded-card border border-line bg-subtle">
+      <div className="aspect-square overflow-hidden rounded-card border border-line bg-white p-4">
         {current ? (
-          <img src={current.url} alt={current.alt || name} className="h-full w-full object-cover" />
+          <img src={current.url} alt={current.alt || name} className="h-full w-full object-contain" />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-muted">
             <ImageOff className="h-10 w-10" />
@@ -47,11 +47,11 @@ function Gallery({ images, name }: { images: { url: string; alt?: string | null 
               onClick={() => setActive(i)}
               aria-label={`Xem ảnh ${i + 1}`}
               className={cn(
-                "h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 transition-colors",
+                "h-16 w-16 shrink-0 overflow-hidden rounded-md border-2 bg-white transition-colors",
                 i === active ? "border-accent" : "border-line hover:border-line-strong",
               )}
             >
-              <img src={img.url} alt="" className="h-full w-full object-cover" />
+              <img src={img.url} alt="" className="h-full w-full object-contain" />
             </button>
           ))}
         </div>
@@ -169,21 +169,23 @@ export function ProductDetailPage() {
 
         <div>
           {product.brand && <p className="text-sm font-medium text-accent">{product.brand.name}</p>}
-          <h1 className="mt-1 text-2xl font-semibold sm:text-3xl">{product.name}</h1>
+          <h1 className="mt-1 text-xl font-bold sm:text-2xl">{product.name}</h1>
 
           <div className="mt-3 flex items-center gap-3">
             <StarRating value={product.ratingAverage} count={product.ratingCount} size="md" />
             <span className="text-sm text-muted">Đã bán {product.soldCount ?? 0}</span>
           </div>
 
-          <div className="mt-5 flex items-baseline gap-3">
-            <span className="font-serif text-3xl font-semibold text-accent">{formatCurrency(price)}</span>
-            {pct > 0 && (
-              <>
-                <span className="text-lg text-muted line-through">{formatCurrency(basePrice)}</span>
-                <Badge tone="danger">-{pct}%</Badge>
-              </>
-            )}
+          <div className="mt-4 rounded-card bg-accent/5 p-4">
+            <div className="flex items-baseline gap-3">
+              <span className="text-3xl font-extrabold text-accent">{formatCurrency(price)}</span>
+              {pct > 0 && (
+                <>
+                  <span className="text-base text-muted line-through">{formatCurrency(basePrice)}</span>
+                  <Badge tone="danger">-{pct}%</Badge>
+                </>
+              )}
+            </div>
           </div>
 
           <div className="mt-5 flex flex-wrap items-center gap-2 text-sm">
@@ -276,16 +278,16 @@ export function ProductDetailPage() {
       </div>
 
       {/* Description & specs */}
-      <div className="mt-14 grid gap-8 lg:grid-cols-[2fr_1fr]">
+      <div className="mt-10 grid gap-8 lg:grid-cols-[2fr_1fr]">
         <div>
-          <h2 className="text-xl font-semibold">Mô tả sản phẩm</h2>
+          <h2 className="text-lg font-bold">Mô tả sản phẩm</h2>
           <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-muted">
             {product.description || "Chưa có mô tả cho sản phẩm này."}
           </p>
         </div>
         {specs.length > 0 && (
           <div>
-            <h2 className="text-xl font-semibold">Thông số kỹ thuật</h2>
+            <h2 className="text-lg font-bold">Thông số kỹ thuật</h2>
             <dl className="mt-3 divide-y divide-line rounded-card border border-line">
               {specs.map(([key, value]) => (
                 <div key={key} className="flex justify-between gap-3 px-4 py-2.5 text-sm">
@@ -299,9 +301,9 @@ export function ProductDetailPage() {
       </div>
 
       {/* Reviews */}
-      <div className="mt-14">
+      <div className="mt-10">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">
+          <h2 className="text-lg font-bold">
             Đánh giá ({product.ratingCount})
           </h2>
           <StarRating value={product.ratingAverage} size="md" />
@@ -325,8 +327,8 @@ export function ProductDetailPage() {
       </div>
 
       {/* Q&A */}
-      <div className="mt-14">
-        <h2 className="flex items-center gap-2 text-xl font-semibold">
+      <div className="mt-10">
+        <h2 className="flex items-center gap-2 text-lg font-bold">
           <MessageCircleQuestion className="h-5 w-5 text-accent" /> Hỏi đáp
         </h2>
         <div className="mt-5 space-y-4">
@@ -351,8 +353,8 @@ export function ProductDetailPage() {
 
       {/* Related */}
       {product.related.length > 0 && (
-        <div className="mt-14">
-          <h2 className="mb-5 text-xl font-semibold">Sản phẩm liên quan</h2>
+        <div className="mt-10">
+          <h2 className="mb-4 text-lg font-bold">Sản phẩm liên quan</h2>
           <ProductGrid
             items={product.related.map((p) => ({
               id: p.id,
