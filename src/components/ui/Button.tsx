@@ -8,19 +8,19 @@ export type ButtonSize = "sm" | "md" | "lg" | "icon";
 
 export const buttonVariantClasses: Record<ButtonVariant, string> = {
   primary:
-    "bg-accent text-accent-ink hover:bg-accent-hover shadow-sm shadow-black/5",
+    "bg-accent text-accent-ink hover:bg-accent-hover shadow-sm",
   secondary:
-    "bg-subtle text-ink hover:bg-line-strong/40 border border-line",
-  outline: "bg-transparent text-ink border border-line hover:border-line-strong hover:bg-subtle",
+    "bg-ink text-canvas hover:opacity-90",
+  outline: "bg-surface text-ink border border-line-strong hover:border-accent hover:text-accent",
   ghost: "bg-transparent text-ink hover:bg-subtle",
   danger: "bg-danger text-white hover:brightness-95",
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
-  sm: "h-8 px-3 text-sm gap-1.5 rounded-md",
-  md: "h-10 px-4 text-sm gap-2 rounded-lg",
-  lg: "h-12 px-6 text-base gap-2 rounded-lg",
-  icon: "h-10 w-10 rounded-lg",
+  sm: "h-8 px-3 text-sm gap-1.5 rounded-lg",
+  md: "h-10 px-4 text-sm gap-2 rounded-xl",
+  lg: "h-12 px-6 text-base gap-2 rounded-xl",
+  icon: "h-10 w-10 rounded-xl",
 };
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

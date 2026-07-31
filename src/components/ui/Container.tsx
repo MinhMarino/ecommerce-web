@@ -3,7 +3,7 @@ import { cn } from "../../lib/utils";
 
 export function Container({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn("mx-auto w-full max-w-[1280px] px-3 sm:px-4 lg:px-6", className)} {...props} />
+    <div className={cn("mx-auto w-full max-w-[1240px] px-4 sm:px-6 lg:px-8", className)} {...props} />
   );
 }
 
@@ -11,7 +11,7 @@ export function Section({
   className,
   ...props
 }: HTMLAttributes<HTMLElement>) {
-  return <section className={cn("py-6 sm:py-8", className)} {...props} />;
+  return <section className={cn("py-10 sm:py-14", className)} {...props} />;
 }
 
 export function SectionHeading({

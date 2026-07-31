@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { ChevronDown, Mail, MapPin, Phone } from "lucide-react";
-import { useSiteSettingsLoader } from "../lib/settings";
-import { cn } from "../lib/utils";
-import { Container } from "../components/ui/Container";
-import { Card } from "../components/ui/Card";
-import { Skeleton } from "../components/ui/Skeleton";
+import { useSiteSettingsLoader } from "../../lib/settings";
+import { cn } from "../../lib/utils";
+import { Container } from "../../components/ui/Container";
+import { Card } from "../../components/ui/Card";
+import { Skeleton } from "../../components/ui/Skeleton";
 
 type PageContent = {
   title: string;

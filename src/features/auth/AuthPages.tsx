@@ -1,12 +1,12 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { KeyRound, Lock, Mail, MailCheck, Phone, User } from "lucide-react";
-import { api, setTokens } from "../lib/api";
-import { useApp, type AuthUser } from "../lib/store";
-import { Container } from "../components/ui/Container";
-import { Button } from "../components/ui/Button";
-import { Input, Label } from "../components/ui/Input";
-import { Alert } from "../components/ui/Alert";
+import { api, setTokens } from "../../lib/api";
+import { useApp, type AuthUser } from "../../lib/store";
+import { Container } from "../../components/ui/Container";
+import { Button } from "../../components/ui/Button";
+import { Input, Label } from "../../components/ui/Input";
+import { Alert } from "../../components/ui/Alert";
 
 function AuthCard({
   title,

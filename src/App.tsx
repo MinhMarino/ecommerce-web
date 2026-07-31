@@ -1,29 +1,29 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { AppProvider } from "./lib/store";
-import { ToastProvider } from "./lib/toast";
-import { Shell } from "./components/Shell";
-import { AdminLayout } from "./components/admin/AdminLayout";
-import { HomePage } from "./pages/HomePage";
-import { ProductsPage } from "./pages/ProductsPage";
-import { ProductDetailPage } from "./pages/ProductDetailPage";
+import { AdminDashboardPage } from "./features/admin/AdminDashboardPage";
+import { AdminLayout } from "./features/admin/AdminLayout";
+import { AdminOrderDetailPage } from "./features/admin/AdminOrderDetailPage";
+import { AdminOrdersPage } from "./features/admin/AdminOrdersPage";
+import { AdminProductsPage } from "./features/admin/AdminProductsPage";
 import {
   ForgotPasswordPage,
   LoginPage,
   RegisterPage,
   ResetPasswordPage,
   VerifyEmailPage,
-} from "./pages/AuthPages";
+} from "./features/auth/AuthPages";
 import {
   AccountPage,
   CartPage,
   CheckoutPage,
   OrderDetailPage,
-} from "./pages/CommercePages";
-import { AdminDashboardPage } from "./pages/admin/AdminDashboardPage";
-import { AdminProductsPage } from "./pages/admin/AdminProductsPage";
-import { AdminOrdersPage } from "./pages/admin/AdminOrdersPage";
-import { AdminOrderDetailPage } from "./pages/admin/AdminOrderDetailPage";
-import { StaticPage } from "./pages/StaticPages";
+} from "./features/storefront/CommercePages";
+import { HomePage } from "./features/storefront/HomePage";
+import { ProductDetailPage } from "./features/storefront/ProductDetailPage";
+import { ProductsPage } from "./features/storefront/ProductsPage";
+import { StaticPage } from "./features/storefront/StaticPages";
+import { StorefrontLayout } from "./features/storefront/StorefrontLayout";
+import { AppProvider } from "./lib/store";
+import { ToastProvider } from "./lib/toast";
 
 export default function App() {
   const basename = import.meta.env.BASE_URL.replace(/\/$/, "") || undefined;
@@ -33,7 +33,6 @@ export default function App() {
       <ToastProvider>
         <BrowserRouter basename={basename}>
           <Routes>
-            {/* Admin back office — own layout with sidebar, outside the storefront Shell */}
             <Route path="admin" element={<AdminLayout />}>
               <Route index element={<AdminDashboardPage />} />
               <Route path="products" element={<AdminProductsPage />} />
@@ -41,8 +40,7 @@ export default function App() {
               <Route path="orders/:id" element={<AdminOrderDetailPage />} />
             </Route>
 
-            {/* Storefront */}
-            <Route element={<Shell />}>
+            <Route element={<StorefrontLayout />}>
               <Route index element={<HomePage />} />
               <Route path="products" element={<ProductsPage />} />
               <Route path="products/:slug" element={<ProductDetailPage />} />

@@ -24,6 +24,7 @@ export type ProductVariant = {
   price?: number | null;
   salePrice?: number | null;
   stock: number;
+  canDelete?: boolean;
 };
 
 export type ProductSummary = {
@@ -44,6 +45,7 @@ export type ProductSummary = {
   category?: { id: string; name: string; slug: string } | null;
   brand?: { id: string; name: string; slug: string; logoUrl?: string | null } | null;
   images?: ProductImage[];
+  image?: string | null;
   reviewCount?: number;
 };
 
@@ -215,6 +217,12 @@ export type DashboardData = {
 };
 
 export type AdminProduct = ProductSummary & {
+  categoryId?: string | null;
+  brandId?: string | null;
+  specs?: Record<string, unknown> | null;
+  barcode?: string | null;
+  videoUrl?: string | null;
+  flashSaleEndsAt?: string | null;
   createdAt: string;
   updatedAt: string;
   variants: ProductVariant[];
