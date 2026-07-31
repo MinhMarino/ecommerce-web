@@ -7,7 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { api, clearTokens, getUser, setUser as persistUser } from "./api";
+import { api, getUser, revokeSession, setUser as persistUser } from "./api";
 
 export type AuthUser = {
   id: string;
@@ -21,7 +21,7 @@ export type AuthUser = {
 type AuthCtx = {
   user: AuthUser | null;
   setSessionUser: (user: AuthUser | null) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
   theme: "light" | "dark";
   toggleTheme: () => void;
   cartCount: number;
@@ -64,8 +64,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         if (u) persistUser(u);
         else persistUser(null);
       },
-      logout: () => {
-        clearTokens();
+      logout: async () => {
+        await revokeSession();
         setUser(null);
         setCartCount(0);
       },

@@ -4,6 +4,7 @@ import {
   CheckCircle2,
   ChevronRight,
   Heart,
+  LogOut,
   MapPin,
   Package,
   ShoppingBag,
@@ -466,9 +467,12 @@ export function CheckoutPage() {
 // ---------------------------------------------------------------------------
 
 export function AccountPage() {
-  const { user } = useApp();
+  const { user, logout } = useApp();
+  const navigate = useNavigate();
+  const toast = useToast();
   const [orders, setOrders] = useState<OrderListItem[] | null>(null);
   const [wishlist, setWishlist] = useState<WishlistItem[] | null>(null);
+  const [loggingOut, setLoggingOut] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -489,6 +493,17 @@ export function AccountPage() {
     );
   }
 
+  async function onLogout() {
+    setLoggingOut(true);
+    try {
+      await logout();
+      toast.success("Bạn đã đăng xuất thành công.");
+      navigate("/", { replace: true });
+    } finally {
+      setLoggingOut(false);
+    }
+  }
+
   return (
     <Container className="py-8 sm:py-10">
       <Card className="flex flex-wrap items-center gap-4 p-5">
@@ -499,7 +514,19 @@ export function AccountPage() {
           <h1 className="text-xl font-semibold">{user.fullName}</h1>
           <p className="text-sm text-muted">{user.email}</p>
         </div>
-        <Badge tone="accent" className="ml-auto">{user.role}</Badge>
+        <div className="ml-auto flex flex-wrap items-center justify-end gap-2">
+          <Badge tone="accent">{user.role}</Badge>
+          <Button
+            type="button"
+            variant="outline"
+            isLoading={loggingOut}
+            onClick={() => void onLogout()}
+            className="text-danger hover:border-danger hover:text-danger"
+          >
+            <LogOut className="h-4 w-4" aria-hidden />
+            Đăng xuất
+          </Button>
+        </div>
       </Card>
 
       <div className="mt-8">

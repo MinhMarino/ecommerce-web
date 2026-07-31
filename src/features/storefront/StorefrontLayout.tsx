@@ -118,8 +118,8 @@ export function StorefrontLayout() {
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [mobileOpen]);
 
-  function onLogout() {
-    logout();
+  async function onLogout() {
+    await logout();
     setMobileOpen(false);
     navigate("/");
   }
@@ -181,13 +181,25 @@ export function StorefrontLayout() {
             )}
 
             {user ? (
-              <Link
-                to="/account"
-                className="hidden h-10 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-muted hover:bg-subtle hover:text-ink sm:flex"
-              >
-                <UserRound className="h-4 w-4" aria-hidden />
-                <span className="max-w-24 truncate">{firstName}</span>
-              </Link>
+              <>
+                <Link
+                  to="/account"
+                  className="hidden h-10 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-muted hover:bg-subtle hover:text-ink sm:flex"
+                >
+                  <UserRound className="h-4 w-4" aria-hidden />
+                  <span className="max-w-24 truncate">{firstName}</span>
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => void onLogout()}
+                  title="Đăng xuất"
+                  aria-label="Đăng xuất"
+                  className="hidden h-10 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-muted hover:bg-danger/10 hover:text-danger focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger sm:inline-flex"
+                >
+                  <LogOut className="h-4 w-4" aria-hidden />
+                  <span className="hidden xl:inline">Đăng xuất</span>
+                </button>
+              </>
             ) : (
               <Link
                 to="/login"
@@ -321,7 +333,7 @@ export function StorefrontLayout() {
                   )}
                   <button
                     type="button"
-                    onClick={onLogout}
+                    onClick={() => void onLogout()}
                     className="flex items-center gap-2 rounded-xl px-3 py-3 text-left text-sm font-semibold text-muted hover:bg-subtle hover:text-ink"
                   >
                     <LogOut className="h-4 w-4" aria-hidden />

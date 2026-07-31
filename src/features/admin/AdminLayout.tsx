@@ -271,8 +271,8 @@ export function AdminLayout() {
     );
   }
 
-  function onLogout() {
-    logout();
+  async function onLogout() {
+    await logout();
     nav("/");
   }
 
@@ -389,7 +389,7 @@ export function AdminLayout() {
 
             <button
               type="button"
-              onClick={onLogout}
+              onClick={() => void onLogout()}
               title="Đăng xuất"
               aria-label="Đăng xuất"
               className="inline-flex h-10 items-center justify-center gap-2 rounded-xl px-2.5 text-muted outline-none hover:bg-danger/10 hover:text-danger focus-visible:ring-2 focus-visible:ring-danger sm:px-3"

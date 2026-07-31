@@ -11,6 +11,24 @@ function getRefreshToken() {
   return localStorage.getItem("refreshToken");
 }
 
+export async function revokeSession() {
+  const refreshToken = getRefreshToken();
+  try {
+    if (refreshToken) {
+      await fetch(`${API_URL}/api/v1/auth/refresh`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refreshToken }),
+      });
+    }
+  } catch {
+    // A network failure must not trap the user in a local authenticated state.
+  } finally {
+    // Logout must still complete locally when the API is temporarily unavailable.
+    clearTokens();
+  }
+}
+
 export function setTokens(accessToken: string, refreshToken: string) {
   localStorage.setItem("accessToken", accessToken);
   localStorage.setItem("refreshToken", refreshToken);
