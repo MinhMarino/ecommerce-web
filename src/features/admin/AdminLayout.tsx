@@ -12,6 +12,7 @@ import {
   ShoppingBag,
   Store,
   Sun,
+  Tags,
   X,
 } from "lucide-react";
 import { useApp } from "../../lib/store";
@@ -53,6 +54,12 @@ const MENU_GROUPS: { label: string; items: MenuItem[] }[] = [
         label: "Đơn hàng",
         icon: ShoppingBag,
         match: "prefix",
+      },
+      {
+        to: "/admin/coupons",
+        label: "Mã giảm giá",
+        icon: Tags,
+        match: "exact",
       },
     ],
   },
@@ -180,6 +187,7 @@ function getRouteMeta(pathname: string) {
   }
   if (pathname === "/admin/orders") return { title: "Đơn hàng" };
   if (pathname === "/admin/products") return { title: "Sản phẩm" };
+  if (pathname === "/admin/coupons") return { title: "Mã giảm giá" };
   return { title: "Tổng quan" };
 }
 

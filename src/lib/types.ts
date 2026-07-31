@@ -121,6 +121,33 @@ export type CouponPreview = {
   message: string;
 };
 
+export type AdminCouponStatus =
+  | "ACTIVE"
+  | "INACTIVE"
+  | "UPCOMING"
+  | "EXPIRED"
+  | "EXHAUSTED";
+
+export type AdminCoupon = {
+  id: string;
+  code: string;
+  discountType: "PERCENT" | "FIXED";
+  value: number;
+  minOrderAmount: number | null;
+  maxDiscount: number | null;
+  usageLimit: number | null;
+  usedCount: number;
+  startsAt: string;
+  endsAt: string;
+  isActive: boolean;
+  status: AdminCouponStatus;
+  redemptionCount: number;
+  orderCount: number;
+  canDelete: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type OrderListItem = {
   id: string;
   orderNumber: string;

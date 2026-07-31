@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AdminDashboardPage } from "./features/admin/AdminDashboardPage";
+import { AdminCouponsPage } from "./features/admin/AdminCouponsPage";
 import { AdminLayout } from "./features/admin/AdminLayout";
 import { AdminOrderDetailPage } from "./features/admin/AdminOrderDetailPage";
 import { AdminOrdersPage } from "./features/admin/AdminOrdersPage";
@@ -36,6 +37,7 @@ export default function App() {
             <Route path="admin" element={<AdminLayout />}>
               <Route index element={<AdminDashboardPage />} />
               <Route path="products" element={<AdminProductsPage />} />
+              <Route path="coupons" element={<AdminCouponsPage />} />
               <Route path="orders" element={<AdminOrdersPage />} />
               <Route path="orders/:id" element={<AdminOrderDetailPage />} />
             </Route>
