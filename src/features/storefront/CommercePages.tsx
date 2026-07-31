@@ -10,13 +10,14 @@ import {
   Trash2,
   Truck,
   User,
+  X,
 } from "lucide-react";
 import { api } from "../../lib/api";
 import { useApp } from "../../lib/store";
 import { useToast } from "../../lib/toast";
 import { formatCurrency, formatDateTime } from "../../lib/utils";
 import { orderLabel, orderTone, paymentLabel, paymentTone, PAYMENT_METHOD_LABEL } from "../../lib/status";
-import type { Cart, OrderDetail, OrderListItem, ShippingMethod, WishlistItem } from "../../lib/types";
+import type { Cart, CouponPreview, OrderDetail, OrderListItem, ShippingMethod, WishlistItem } from "../../lib/types";
 import { Container } from "../../components/ui/Container";
 import { Button, ButtonLink } from "../../components/ui/Button";
 import { Input, Label, Textarea } from "../../components/ui/Input";
@@ -188,6 +189,9 @@ export function CheckoutPage() {
   });
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [coupon, setCoupon] = useState<CouponPreview | null>(null);
+  const [couponError, setCouponError] = useState<string | null>(null);
+  const [checkingCoupon, setCheckingCoupon] = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -204,7 +208,37 @@ export function CheckoutPage() {
 
   const selectedMethod = methods.find((m) => m.id === form.shippingMethodId);
   const shippingFee = selectedMethod?.fee ?? 0;
-  const total = (cart?.subtotal ?? 0) + shippingFee;
+  const total = (cart?.subtotal ?? 0) + shippingFee - (coupon?.discount ?? 0);
+
+  async function applyCoupon() {
+    if (!form.couponCode) {
+      setCouponError("Vui lòng nhập mã giảm giá");
+      return;
+    }
+
+    setCheckingCoupon(true);
+    setCouponError(null);
+    try {
+      const preview = await api<CouponPreview>("/api/v1/coupons/preview", {
+        method: "POST",
+        auth: false,
+        body: JSON.stringify({ code: form.couponCode, subtotal: cart?.subtotal ?? 0 }),
+      });
+      setCoupon(preview);
+      toast.success(preview.message);
+    } catch (err) {
+      setCoupon(null);
+      setCouponError(err instanceof Error ? err.message : "Không kiểm tra được mã giảm giá");
+    } finally {
+      setCheckingCoupon(false);
+    }
+  }
+
+  function removeCoupon() {
+    setCoupon(null);
+    setCouponError(null);
+    setForm((current) => ({ ...current, couponCode: "" }));
+  }
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -339,13 +373,37 @@ export function CheckoutPage() {
           </Card>
 
           <Card className="p-5">
-            <h2 className="font-semibold">Ghi chú đơn hàng</h2>
-            <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              <Input
-                placeholder="Mã giảm giá (nếu có)"
-                value={form.couponCode}
-                onChange={(e) => setForm({ ...form, couponCode: e.target.value })}
-              />
+            <h2 className="font-semibold">Mã giảm giá & ghi chú</h2>
+            <div className="mt-4 grid gap-4">
+              <div>
+                <Label htmlFor="couponCode">Mã giảm giá</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="couponCode"
+                    placeholder="Ví dụ: WELCOME10"
+                    value={form.couponCode}
+                    onChange={(e) => setForm({ ...form, couponCode: e.target.value })}
+                    aria-describedby="coupon-feedback"
+                  />
+                  <Button type="button" variant="outline" onClick={applyCoupon} isLoading={checkingCoupon}>
+                    Áp dụng
+                  </Button>
+                </div>
+                <div id="coupon-feedback" aria-live="polite">
+                  {couponError && <p className="mt-2 text-sm font-medium text-danger">{couponError}</p>}
+                  {coupon && (
+                    <div className="mt-2 flex items-center justify-between rounded-lg bg-ok/10 px-3 py-2 text-sm text-ok">
+                      <span className="flex items-center gap-2">
+                        <CheckCircle2 className="h-4 w-4" />
+                        {coupon.code} · giảm {formatCurrency(coupon.discount)}
+                      </span>
+                      <button type="button" onClick={removeCoupon} aria-label="Gỡ mã giảm giá" className="rounded p-1 hover:bg-ok/10">
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
               <Textarea
                 placeholder="Ghi chú cho người bán"
                 value={form.note}
@@ -382,6 +440,12 @@ export function CheckoutPage() {
               <span className="text-muted">Phí vận chuyển</span>
               <span>{formatCurrency(shippingFee)}</span>
             </div>
+            {coupon && (
+              <div className="flex justify-between text-ok">
+                <span>Giảm giá ({coupon.code})</span>
+                <span>-{formatCurrency(coupon.discount)}</span>
+              </div>
+            )}
           </div>
           <div className="my-4 h-px bg-line" />
           <div className="flex justify-between text-base font-semibold">

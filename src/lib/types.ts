@@ -111,6 +111,16 @@ export type ShippingMethod = {
   estimatedDays: number;
 };
 
+export type CouponPreview = {
+  code: string;
+  discountType: "PERCENT" | "FIXED";
+  value: number;
+  discount: number;
+  minOrderAmount: number | null;
+  maxDiscount: number | null;
+  message: string;
+};
+
 export type OrderListItem = {
   id: string;
   orderNumber: string;
