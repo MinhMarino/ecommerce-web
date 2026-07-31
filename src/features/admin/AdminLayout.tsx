@@ -47,7 +47,7 @@ const MENU_GROUPS: { label: string; items: MenuItem[] }[] = [
         to: "/admin/products",
         label: "Sản phẩm",
         icon: Package,
-        match: "exact",
+        match: "prefix",
       },
       {
         to: "/admin/orders",
@@ -182,6 +182,12 @@ function StorefrontFooter({ onNavigate }: { onNavigate?: () => void }) {
 }
 
 function getRouteMeta(pathname: string) {
+  if (pathname === "/admin/products/new") {
+    return { title: "Tạo sản phẩm", parent: "Sản phẩm" };
+  }
+  if (pathname.startsWith("/admin/products/") && pathname.endsWith("/edit")) {
+    return { title: "Chỉnh sửa sản phẩm", parent: "Sản phẩm" };
+  }
   if (pathname.startsWith("/admin/orders/")) {
     return { title: "Chi tiết đơn hàng", parent: "Đơn hàng" };
   }

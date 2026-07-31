@@ -4,7 +4,7 @@ import { AdminCouponsPage } from "./features/admin/AdminCouponsPage";
 import { AdminLayout } from "./features/admin/AdminLayout";
 import { AdminOrderDetailPage } from "./features/admin/AdminOrderDetailPage";
 import { AdminOrdersPage } from "./features/admin/AdminOrdersPage";
-import { AdminProductsPage } from "./features/admin/AdminProductsPage";
+import { AdminProductFormPage, AdminProductsPage } from "./features/admin/AdminProductsPage";
 import {
   ForgotPasswordPage,
   LoginPage,
@@ -37,6 +37,8 @@ export default function App() {
             <Route path="admin" element={<AdminLayout />}>
               <Route index element={<AdminDashboardPage />} />
               <Route path="products" element={<AdminProductsPage />} />
+              <Route path="products/new" element={<AdminProductFormPage />} />
+              <Route path="products/:id/edit" element={<AdminProductFormPage />} />
               <Route path="coupons" element={<AdminCouponsPage />} />
               <Route path="orders" element={<AdminOrdersPage />} />
               <Route path="orders/:id" element={<AdminOrderDetailPage />} />

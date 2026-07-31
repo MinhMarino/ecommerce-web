@@ -259,6 +259,8 @@ export type AdminProduct = ProductSummary & {
   specs?: Record<string, unknown> | null;
   barcode?: string | null;
   videoUrl?: string | null;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
   flashSaleEndsAt?: string | null;
   createdAt: string;
   updatedAt: string;

@@ -7,8 +7,9 @@ import {
   type FormEvent,
   type ReactNode,
 } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import {
+  ArrowLeft,
   EyeOff,
   ImageOff,
   LoaderCircle,
@@ -73,6 +74,12 @@ type VariantRow = {
   stock: string;
 };
 
+type SpecRow = {
+  key: string;
+  name: string;
+  value: string;
+};
+
 type ProductFormState = {
   name: string;
   description: string;
@@ -88,7 +95,9 @@ type ProductFormState = {
   isFlashSale: boolean;
   flashSaleEndsAt: string;
   videoUrl: string;
-  specs: string;
+  seoTitle: string;
+  seoDescription: string;
+  specs: SpecRow[];
   images: ImageRow[];
   variants: VariantRow[];
 };
@@ -121,6 +130,10 @@ function createVariantRow(): VariantRow {
   };
 }
 
+function createSpecRow(name = "", value = ""): SpecRow {
+  return { key: nextRowKey("spec"), name, value };
+}
+
 function createEmptyForm(): ProductFormState {
   return {
     name: "",
@@ -137,7 +150,9 @@ function createEmptyForm(): ProductFormState {
     isFlashSale: false,
     flashSaleEndsAt: "",
     videoUrl: "",
-    specs: "",
+    seoTitle: "",
+    seoDescription: "",
+    specs: [createSpecRow()],
     images: [createImageRow()],
     variants: [],
   };
@@ -208,7 +223,17 @@ function formFromProduct(product: AdminProduct): ProductFormState {
     isFlashSale: product.isFlashSale ?? false,
     flashSaleEndsAt: toDateTimeLocal(product.flashSaleEndsAt),
     videoUrl: product.videoUrl ?? "",
-    specs: product.specs ? JSON.stringify(product.specs, null, 2) : "",
+    seoTitle: product.seoTitle ?? "",
+    seoDescription: product.seoDescription ?? "",
+    specs:
+      product.specs && Object.keys(product.specs).length > 0
+        ? Object.entries(product.specs).map(([name, value]) =>
+            createSpecRow(
+              name,
+              typeof value === "string" ? value : JSON.stringify(value),
+            ),
+          )
+        : [createSpecRow()],
     images:
       product.images && product.images.length > 0
         ? product.images.map((image) => ({
@@ -262,18 +287,34 @@ function validateForm(form: ProductFormState) {
   if (form.flashSaleEndsAt && Number.isNaN(new Date(form.flashSaleEndsAt).getTime())) {
     errors.flashSaleEndsAt = "Thời gian kết thúc không hợp lệ.";
   }
+  if (form.seoTitle.trim().length > 70) {
+    errors.seoTitle = "SEO title tối đa 70 ký tự.";
+  }
+  if (form.seoDescription.trim().length > 320) {
+    errors.seoDescription = "SEO description tối đa 320 ký tự.";
+  }
 
-  if (form.specs.trim()) {
-    try {
-      const parsed: unknown = JSON.parse(form.specs);
-      if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
-        errors.specs = "Thông số phải là một JSON object.";
-      } else {
-        specs = parsed as Record<string, unknown>;
-      }
-    } catch {
-      errors.specs = "JSON thông số không hợp lệ.";
+  const normalizedSpecs = form.specs.filter(
+    (spec) => spec.name.trim() || spec.value.trim(),
+  );
+  const seenSpecs = new Set<string>();
+  normalizedSpecs.forEach((spec) => {
+    const name = spec.name.trim();
+    const value = spec.value.trim();
+    if (!name) errors[`spec-${spec.key}-name`] = "Tên thông số là bắt buộc.";
+    if (!value) errors[`spec-${spec.key}-value`] = "Giá trị thông số là bắt buộc.";
+    const normalizedName = name.toLocaleLowerCase("vi-VN");
+    if (name && seenSpecs.has(normalizedName)) {
+      errors[`spec-${spec.key}-name`] = "Tên thông số không được trùng.";
     }
+    if (name) seenSpecs.add(normalizedName);
+  });
+  if (!Object.keys(errors).some((key) => key.startsWith("spec-"))) {
+    specs = normalizedSpecs.length
+      ? Object.fromEntries(
+          normalizedSpecs.map((spec) => [spec.name.trim(), spec.value.trim()]),
+        )
+      : null;
   }
 
   form.images.forEach((image) => {
@@ -332,7 +373,7 @@ function FormSection({
   );
 }
 
-function ProductFormModal({
+function ProductForm({
   productId,
   categories,
   brands,
@@ -426,6 +467,16 @@ function ProductFormModal({
     if (field === "stock") clearError("stock");
   }
 
+  function updateSpec(key: string, field: "name" | "value", value: string) {
+    setForm((current) => ({
+      ...current,
+      specs: current.specs.map((spec) =>
+        spec.key === key ? { ...spec, [field]: value } : spec,
+      ),
+    }));
+    clearError(`spec-${key}-${field}`);
+  }
+
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const validation = validateForm(form);
@@ -450,6 +501,8 @@ function ProductFormModal({
         ? new Date(form.flashSaleEndsAt).toISOString()
         : null,
       videoUrl: nullableText(form.videoUrl),
+      seoTitle: nullableText(form.seoTitle),
+      seoDescription: nullableText(form.seoDescription),
       specs: validation.specs,
       images: form.images.flatMap((image) => {
         const url = image.url.trim();
@@ -503,12 +556,7 @@ function ProductFormModal({
   }
 
   return (
-    <Modal
-      open
-      onClose={onClose}
-      title={productId ? "Sửa sản phẩm" : "Thêm sản phẩm mới"}
-      className="max-h-[calc(100vh-2rem)] max-w-5xl overflow-y-auto"
-    >
+    <div>
       {detailLoading ? (
         <div className="flex min-h-64 flex-col items-center justify-center gap-3 text-sm text-muted">
           <LoaderCircle className="h-7 w-7 animate-spin text-accent" aria-hidden />
@@ -732,21 +780,110 @@ function ProductFormModal({
           </FormSection>
 
           <FormSection
-            title="Thông số kỹ thuật"
-            description={'Nhập một JSON object, ví dụ: {"Màu sắc": "Đen", "Bảo hành": "12 tháng"}.'}
+            title="SEO"
+            description="Hiển thị trên kết quả tìm kiếm và tiêu đề trang chi tiết sản phẩm."
           >
-            <Label htmlFor="product-specs">JSON thông số</Label>
-            <Textarea
-              id="product-specs"
-              value={form.specs}
-              onChange={(event) => setField("specs", event.target.value)}
-              placeholder={'{\n  "Màu sắc": "Đen"\n}'}
-              className="min-h-36 font-mono"
-              spellCheck={false}
-              error={Boolean(errors.specs)}
-              aria-invalid={Boolean(errors.specs)}
-            />
-            <FieldError>{errors.specs}</FieldError>
+            <div className="grid gap-4">
+              <div>
+                <Label htmlFor="product-seo-title">SEO title</Label>
+                <Input
+                  id="product-seo-title"
+                  value={form.seoTitle}
+                  maxLength={70}
+                  placeholder="Mặc định dùng tên sản phẩm nếu để trống"
+                  onChange={(event) => setField("seoTitle", event.target.value)}
+                  error={Boolean(errors.seoTitle)}
+                  aria-invalid={Boolean(errors.seoTitle)}
+                />
+                <div className="mt-1 flex justify-between text-xs text-muted">
+                  <FieldError>{errors.seoTitle}</FieldError>
+                  <span>{form.seoTitle.trim().length}/70</span>
+                </div>
+              </div>
+              <div>
+                <Label htmlFor="product-seo-description">SEO description</Label>
+                <Textarea
+                  id="product-seo-description"
+                  value={form.seoDescription}
+                  maxLength={320}
+                  placeholder="Mặc định dùng mô tả sản phẩm nếu để trống"
+                  onChange={(event) => setField("seoDescription", event.target.value)}
+                  error={Boolean(errors.seoDescription)}
+                  aria-invalid={Boolean(errors.seoDescription)}
+                />
+                <div className="mt-1 flex justify-between text-xs text-muted">
+                  <FieldError>{errors.seoDescription}</FieldError>
+                  <span>{form.seoDescription.trim().length}/320</span>
+                </div>
+              </div>
+            </div>
+          </FormSection>
+
+          <FormSection
+            title="Thông số kỹ thuật"
+            description="Nhập từng thông số theo cặp tên và giá trị. Dữ liệu sẽ tự động được lưu đúng định dạng."
+          >
+            <div className="grid gap-3">
+              {form.specs.map((spec, index) => (
+                <div
+                  key={spec.key}
+                  className="grid gap-3 rounded-xl border border-line bg-subtle/40 p-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)_auto] sm:items-start"
+                >
+                  <div>
+                    <Label htmlFor={`spec-name-${spec.key}`}>Tên thông số {index + 1}</Label>
+                    <Input
+                      id={`spec-name-${spec.key}`}
+                      value={spec.name}
+                      placeholder="VD: Chất liệu"
+                      onChange={(event) => updateSpec(spec.key, "name", event.target.value)}
+                      error={Boolean(errors[`spec-${spec.key}-name`])}
+                    />
+                    <FieldError>{errors[`spec-${spec.key}-name`]}</FieldError>
+                  </div>
+                  <div>
+                    <Label htmlFor={`spec-value-${spec.key}`}>Giá trị</Label>
+                    <Input
+                      id={`spec-value-${spec.key}`}
+                      value={spec.value}
+                      placeholder="VD: Nhôm nguyên khối"
+                      onChange={(event) => updateSpec(spec.key, "value", event.target.value)}
+                      error={Boolean(errors[`spec-${spec.key}-value`])}
+                    />
+                    <FieldError>{errors[`spec-${spec.key}-value`]}</FieldError>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setForm((current) => ({
+                        ...current,
+                        specs:
+                          current.specs.length === 1
+                            ? [createSpecRow()]
+                            : current.specs.filter((item) => item.key !== spec.key),
+                      }))
+                    }
+                    aria-label={`Xóa thông số ${index + 1}`}
+                    className="flex h-10 w-10 items-center justify-center rounded-lg text-muted hover:bg-danger/10 hover:text-danger sm:mt-7"
+                  >
+                    <X className="h-4 w-4" aria-hidden />
+                  </button>
+                </div>
+              ))}
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="justify-self-start"
+                onClick={() =>
+                  setForm((current) => ({
+                    ...current,
+                    specs: [...current.specs, createSpecRow()],
+                  }))
+                }
+              >
+                <Plus className="h-4 w-4" aria-hidden /> Thêm thông số
+              </Button>
+            </div>
           </FormSection>
 
           <FormSection title="Hình ảnh" description="Ảnh đầu tiên sẽ được dùng làm ảnh đại diện.">
@@ -978,7 +1115,90 @@ function ProductFormModal({
           </div>
         </form>
       )}
-    </Modal>
+    </div>
+  );
+}
+
+export function AdminProductFormPage() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [brands, setBrands] = useState<Brand[]>([]);
+  const [taxonomiesLoading, setTaxonomiesLoading] = useState(true);
+  const [taxonomyError, setTaxonomyError] = useState<string | null>(null);
+  const categoryOptions = useMemo(() => flattenCategories(categories), [categories]);
+
+  const loadTaxonomies = useCallback(async () => {
+    setTaxonomiesLoading(true);
+    setTaxonomyError(null);
+    try {
+      const [categoryData, brandData] = await Promise.all([
+        api<{ items: Category[] }>("/api/v1/categories", { auth: false }),
+        api<{ items: Brand[] }>("/api/v1/brands", { auth: false }),
+      ]);
+      setCategories(categoryData.items);
+      setBrands(brandData.items);
+    } catch (requestError) {
+      setTaxonomyError(
+        requestError instanceof Error
+          ? requestError.message
+          : "Không tải được danh mục và thương hiệu.",
+      );
+    } finally {
+      setTaxonomiesLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadTaxonomies();
+  }, [loadTaxonomies]);
+
+  return (
+    <div className="mx-auto max-w-6xl">
+      <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
+        <div className="flex min-w-0 items-start gap-3">
+          <button
+            type="button"
+            onClick={() => navigate("/admin/products")}
+            aria-label="Quay lại danh sách sản phẩm"
+            className="mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-line bg-surface text-muted hover:border-accent hover:text-accent"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden />
+          </button>
+          <div>
+            <h1 className="text-xl font-bold sm:text-2xl">
+              {id ? "Chỉnh sửa sản phẩm" : "Tạo sản phẩm mới"}
+            </h1>
+            <p className="mt-1 text-sm text-muted">
+              {id
+                ? "Cập nhật thông tin, giá, hình ảnh, thông số và biến thể sản phẩm."
+                : "Điền đầy đủ thông tin để thêm sản phẩm vào cửa hàng."}
+            </p>
+          </div>
+        </div>
+        <Badge tone={id ? "info" : "accent"}>{id ? "Chế độ chỉnh sửa" : "Sản phẩm mới"}</Badge>
+      </div>
+
+      {taxonomyError && (
+        <div role="alert" className="mb-4 rounded-xl border border-warning/25 bg-warning/5 px-4 py-3 text-sm text-warning">
+          {taxonomyError}{" "}
+          <button type="button" onClick={() => void loadTaxonomies()} className="font-semibold underline">
+            Thử lại
+          </button>
+        </div>
+      )}
+
+      <Card className="p-4 sm:p-6">
+        <ProductForm
+          productId={id ?? null}
+          categories={categoryOptions}
+          brands={brands}
+          taxonomiesLoading={taxonomiesLoading}
+          onClose={() => navigate("/admin/products")}
+          onSaved={() => navigate("/admin/products")}
+        />
+      </Card>
+    </div>
   );
 }
 
@@ -1052,6 +1272,7 @@ function ProductListSkeleton() {
 
 export function AdminProductsPage() {
   const toast = useToast();
+  const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
   const [result, setResult] = useState<Paginated<AdminProduct> | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -1061,8 +1282,6 @@ export function AdminProductsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchInput, setSearchInput] = useState(params.get("q") ?? "");
-  const [formOpen, setFormOpen] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
   const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
@@ -1162,12 +1381,8 @@ export function AdminProductsPage() {
 
   useEffect(() => {
     if (params.get("create") !== "true") return;
-    setEditingId(null);
-    setFormOpen(true);
-    const next = new URLSearchParams(params);
-    next.delete("create");
-    setParams(next, { replace: true });
-  }, [params, setParams]);
+    navigate("/admin/products/new", { replace: true });
+  }, [navigate, params]);
 
   function onSearchSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -1190,13 +1405,11 @@ export function AdminProductsPage() {
   }
 
   function openCreate() {
-    setEditingId(null);
-    setFormOpen(true);
+    navigate("/admin/products/new");
   }
 
   function openEdit(product: AdminProduct) {
-    setEditingId(product.id);
-    setFormOpen(true);
+    navigate(`/admin/products/${product.id}/edit`);
   }
 
   function openAction(product: AdminProduct, action: ProductAction) {
@@ -1524,21 +1737,6 @@ export function AdminProductsPage() {
 
       {!error && !loading && result && result.pagination.totalPages > 1 && (
         <Pagination meta={result.pagination} onPageChange={onPageChange} className="mt-6" />
-      )}
-
-      {formOpen && (
-        <ProductFormModal
-          productId={editingId}
-          categories={categoryOptions}
-          brands={brands}
-          taxonomiesLoading={taxonomiesLoading}
-          onClose={() => setFormOpen(false)}
-          onSaved={() => {
-            setFormOpen(false);
-            setEditingId(null);
-            void load();
-          }}
-        />
       )}
 
       <Modal
