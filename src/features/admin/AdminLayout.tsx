@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
+  Award,
   ChevronRight,
   EyeOff,
   FileText,
+  FolderTree,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -48,6 +50,18 @@ const MENU_GROUPS: { label: string; items: MenuItem[] }[] = [
         label: "Sản phẩm",
         icon: Package,
         match: "prefix",
+      },
+      {
+        to: "/admin/categories",
+        label: "Danh mục",
+        icon: FolderTree,
+        match: "exact",
+      },
+      {
+        to: "/admin/brands",
+        label: "Thương hiệu",
+        icon: Award,
+        match: "exact",
       },
       {
         to: "/admin/orders",
@@ -193,6 +207,8 @@ function getRouteMeta(pathname: string) {
   }
   if (pathname === "/admin/orders") return { title: "Đơn hàng" };
   if (pathname === "/admin/products") return { title: "Sản phẩm" };
+  if (pathname === "/admin/categories") return { title: "Danh mục" };
+  if (pathname === "/admin/brands") return { title: "Thương hiệu" };
   if (pathname === "/admin/coupons") return { title: "Mã giảm giá" };
   return { title: "Tổng quan" };
 }

@@ -1,5 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AdminDashboardPage } from "./features/admin/AdminDashboardPage";
+import { AdminBrandsPage } from "./features/admin/AdminBrandsPage";
+import { AdminCategoriesPage } from "./features/admin/AdminCategoriesPage";
 import { AdminCouponsPage } from "./features/admin/AdminCouponsPage";
 import { AdminLayout } from "./features/admin/AdminLayout";
 import { AdminOrderDetailPage } from "./features/admin/AdminOrderDetailPage";
@@ -39,6 +41,8 @@ export default function App() {
               <Route path="products" element={<AdminProductsPage />} />
               <Route path="products/new" element={<AdminProductFormPage />} />
               <Route path="products/:id/edit" element={<AdminProductFormPage />} />
+              <Route path="categories" element={<AdminCategoriesPage />} />
+              <Route path="brands" element={<AdminBrandsPage />} />
               <Route path="coupons" element={<AdminCouponsPage />} />
               <Route path="orders" element={<AdminOrdersPage />} />
               <Route path="orders/:id" element={<AdminOrderDetailPage />} />

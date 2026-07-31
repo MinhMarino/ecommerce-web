@@ -13,6 +13,38 @@ export type Brand = {
   logoUrl?: string | null;
 };
 
+export type AdminCategory = {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string | null;
+  imageUrl?: string | null;
+  parentId?: string | null;
+  parent?: { id: string; name: string } | null;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  sortOrder: number;
+  isActive: boolean;
+  childrenCount: number;
+  productCount: number;
+  canDelete: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type AdminBrand = {
+  id: string;
+  name: string;
+  slug: string;
+  logoUrl?: string | null;
+  description?: string | null;
+  isActive: boolean;
+  productCount: number;
+  canDelete: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type ProductImage = { id?: string; url: string; alt?: string | null; sortOrder?: number };
 
 export type ProductVariant = {
